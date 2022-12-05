@@ -1,0 +1,41 @@
+
+.licence-update{ background-color:#ddd; }
+
+body #licence-preview .licence-items table tbody td.description span{
+    color: #d1d3ea !important;
+}
+
+.customers.viewlicence #wrapper{
+    margin-left: 0;
+}
+
+@media (max-width: 1430px){
+    .customers.viewlicence .panel_s {
+        width: 100%;
+    }
+}
+
+tr.has-row-options-2 a,
+tr.has-row-options-2,
+tr.licence_status_2 {
+    background: #004803;
+}
+
+tr.has-row-options-1 a,
+tr.has-row-options-1,
+tr.licence_status_1 {
+    background: #b7ab00;
+    color: #000;
+}
+
+.bg-light {
+    background-color: #f8f9fa!important;
+}
+
+.form-group-no-margin .form-group {
+    margin-bottom: 0;
+}
+
+.tooltip-right i{
+    margin-right: 2px;
+}
