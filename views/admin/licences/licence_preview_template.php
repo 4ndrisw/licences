@@ -47,7 +47,7 @@
                         $total_inspection_items = total_rows(db_prefix().'program_items',
                           array(
                            'inspection_id'=>$licence->inspection_id,
-                           'licence_id'=>NULL,
+                           'licence_id'=> NULL,
                            )
                           );
                         if($total_inspection_items > 0){
@@ -68,7 +68,7 @@
                         $total_program_items = total_rows(db_prefix().'program_items',
                           array(
                            'program_id'=>$licence->program_id,
-                           //'licence_id'=>NULL,
+                           //'licence_id'=>$licence->id,
                            )
                           );
                         if($total_program_items > 0){
@@ -305,8 +305,8 @@
 
                      <div class="col-md-12">
                         <h4 class="font-medium mbot15"><?php echo _l('related_to_inspection',array(
-                           _l('licence_related'),
                            _l('inspection_related'),
+                           _l('inspection_lowercase'),
                            '<a href="'.admin_url('inspections/list_inspections/'.$licence->inspection_id).'" target="_blank">' . format_inspection_number($licence->inspection_id) . '</a>',
                            )); ?></h4>
                      </div>

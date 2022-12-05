@@ -171,6 +171,15 @@ $lang['licence_item_proposed']         = 'Licence item proposed';
 $lang['format_number_form']         = 'Format number form';
 $lang['next_institution_licence_number']         = 'Next number';
 
+$lang['related_to_program']         = 'This %s is related to %s: %s';
+$lang['related_to_inspection']         = '%s ini terkait dengan %s: %s';
+
+$lang['remove_this_item']         = 'Remove this item';
+$lang['permission_format']         = 'Permission format';
+$lang['licenced']         = 'Licenced';
+
+
+
 /*
 
 # Licences

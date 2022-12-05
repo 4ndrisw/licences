@@ -167,6 +167,10 @@ $lang['licence_related']                       = 'Surat Keterangan';
 $lang['format_number_form']         = 'Formulir Penomoran';
 $lang['next_institution_licence_number']         = 'Nomor selanjutnya';
 
+$lang['remove_this_item']         = 'Hapus item ini';
+$lang['permission_format']         = 'Permission format';
+$lang['licenced']         = 'Suket diproses';
+
 /*
 
 

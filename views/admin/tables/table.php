@@ -148,7 +148,7 @@ foreach ($rResult as $aRow) {
     $inspector = get_surveyor_name_by_id($aRow[db_prefix().'licences.inspector_id']);
 
     if ($aRow['inspector_id']) {
-        $inspector .= '<br /><span class="hide"> - </span><span class="text-success">' . _l('licensed') . '</span>';
+        $inspector .= '<br /><span class="hide"> - </span><span class="text-success">' . _l('licenced') . '</span>';
     }
 
     $row[] = $inspector;

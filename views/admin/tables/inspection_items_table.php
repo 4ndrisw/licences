@@ -20,9 +20,8 @@ $where        = [
     'AND clientid=' . $licence_clientid,
     ];
 
-array_push($where, 'AND program_id = ' . $licence_program_id);
 array_push($where, 'AND inspection_id = ' . $licence_inspection_id);
-array_push($where, 'AND licence_id IS NULL');
+array_push($where, 'AND licence_id IS NULL ');
 
 $join = [
 //    'JOIN '.db_prefix().'staff ON '.db_prefix().'staff.staffid = '.db_prefix().'reminders.staff',
@@ -33,10 +32,8 @@ $result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, [
     'inspector_id',
     'inspector_staff_id',
     'surveyor_id',
-    'clientid',
     'program_id',
-    'inspection_id',
-    'licence_id',
+    'clientid',
     'jenis_pesawat_id',
     ]);
 $output  = $result['output'];
@@ -67,7 +64,7 @@ foreach ($rResult as $aRow) {
 //                $btn_disable = 'btn_disable';
 //            }
 
-            $_data = '<a class="btn btn-success '.$btn_disable.'" title = "'._l('remove_this_item').'" href="#" onclick="licences_add_licence_item( ' . $licence_id .',' . $aRow['id'] .'); return false;">+</a>';
+            $_data = '<a class="btn btn-success '.$btn_disable.'" title = "'._l('remove_this_item').'" href="#" onclick="licences_add_licence_item(' . $licence_id . ','. $aRow['id'] . '); return false;">+</a>';
         }
         $row[] = $_data;
     }
