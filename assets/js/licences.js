@@ -112,6 +112,15 @@ function licences_load_licence_template(id) {
     });
 }
 
+function licences_add_licence_item_number(id){
+    var data = {};
+    data.id = id;
+    console.log(data);
+    $.post(admin_url + 'licences/add_licence_item_number', data).done(function (response) {
+        reload_licences_tables();
+    });
+}
+
 // Init licence modal and get data from server
 function init_licence_items_modal(licence_id, jenis_pesawat_id) {
   var queryStr = "";
