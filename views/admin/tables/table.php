@@ -3,6 +3,9 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 $program_id = $this->ci->input->post('program_id');
+$staff_id = get_staff_user_id();
+$current_user = get_client_type($staff_id);
+$company_id = $current_user->client_id;
 
 $aColumns = [
     db_prefix() . 'licences.number',
@@ -41,11 +44,11 @@ if ($this->ci->input->post('not_sent')) {
     array_push($filter, 'OR (sent= 0 AND ' . db_prefix() . 'licences.status NOT IN (2,3,4))');
 }
 if ($this->ci->input->post('invoiced')) {
-    array_push($filter, 'OR inspector_id IS NOT NULL');
+    array_push($filter, 'OR '.db_prefix() . 'licences.inspector_id IS NOT NULL');
 }
 
 if ($this->ci->input->post('not_invoiced')) {
-    array_push($filter, 'OR inspector_id IS NULL');
+    array_push($filter, 'OR '.db_prefix() . 'licences.inspector_id IS NULL');
 }
 $statuses  = $this->ci->licences_model->get_statuses();
 $statusIds = [];
@@ -86,6 +89,24 @@ if (count($filter) > 0) {
 
 if (isset($clientid) && $clientid != '') {
     array_push($where, 'AND ' . db_prefix() . 'licences.clientid=' . $this->ci->db->escape_str($clientid));
+}
+
+if (isset($company_id) && $company_id != '') {
+   if(strtolower($current_user->client_type) == 'company'){
+     array_push($where, 'AND ' . db_prefix() . 'programs.clientid=' . $this->ci->db->escape_str($company_id));
+   } 
+}
+
+if(get_option('inspector_staff_only_view_programs_assigned') && is_inspector_staff($staff_id)){
+    $userWhere = 'AND '. db_prefix().'licences.inspector_staff_id'.' = ' . $this->ci->db->escape_str($staff_id);
+    array_push($where, $userWhere);
+}
+
+if(is_inspector_staff($staff_id)){
+    $inspector_id = get_inspector_id_by_staff_id($staff_id);
+    $userWhere = 'AND '.db_prefix() . 'licences.inspector_id = ' . $this->ci->db->escape_str($inspector_id);
+    array_push($where, $userWhere);
+
 }
 
 if ($program_id) {

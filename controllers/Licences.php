@@ -814,17 +814,24 @@ class Licences extends AdminController
 
         $staffid = get_staff_user_id();
         $data['institution_id'] = get_institution_id_by_staff_id($staffid);
+        if(is_admin()){
+            $data['institution_id'] = $key;
+        }
         //$data['inspector_id'] = get_inspector_id_by_staff_id($staffid);
         $data['kelompok_alat'] = get_kelompok_alat();
 
         $next_numbers = $this->licences_model->get_lincence_institution_next_number($data['institution_id']);
+        if(!$next_numbers){
+            $data['string'] = 'error next number is not found';
+            $this->load->view('blank_page', $data);
+            return;
+        }
         foreach($next_numbers as $q){
             $institution_next_numbers[$q['category']] = $q['next_number'];
         }
         $data['institution_next_numbers'] = $institution_next_numbers;
 
         $data['title']      = _l('format_number_form');
-        
         $this->load->view('admin/licences/format_number', $data);
     }
 

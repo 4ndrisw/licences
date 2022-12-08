@@ -442,19 +442,19 @@
             <div role="tabpanel" class="tab-pane" id="tab_licence_items">
                <span class="label label-success mbot5 mtop5"><?php echo _l($licence->licence_item_info); ?> </span>
                <hr />
-               <?php render_datatable(array( _l( 'licence_items_table'), _l( 'serial_number'), _l( 'unit_number'), _l( 'process')), 'licence_items'); ?>
+               <?php render_datatable(array( _l( 'licence_items_table_heading'), _l( 'serial_number'), _l( 'unit_number'), _l( 'process')), 'licence_items'); ?>
                <?php echo _l('this_list_has_been_load_from_master_of_equipment'); ?>
 
             </div>
             <div role="tabpanel" class="tab-pane" id="tab_inspection_items">
                <span class="label label-success mbot5 mtop5"><?php echo _l('inspection_items_proposed'); ?> </span>
                <hr />
-               <?php render_datatable(array( _l( 'inspection_items_table'), _l( 'serial_number'), _l( 'unit_number'), _l( 'process')), 'inspection_items'); ?>
+               <?php render_datatable(array( _l( 'inspection_items_table_heading'), _l( 'serial_number'), _l( 'unit_number'), _l( 'process')), 'inspection_items'); ?>
             </div>
             <div role="tabpanel" class="tab-pane" id="tab_program_items">
                <span class="label label-success mbot5 mtop5"><?php echo _l('program_items_proposed'); ?> </span>
                <hr />
-               <?php render_datatable(array( _l( 'program_items_table'), _l( 'serial_number'), _l( 'unit_number'), _l( 'process')), 'program_items'); ?>
+               <?php render_datatable(array( _l( 'program_items_table_heading'), _l( 'serial_number'), _l( 'unit_number'), _l( 'process')), 'program_items'); ?>
             </div>
             <div role="tabpanel" class="tab-pane" id="tab_tasks">
                <?php init_relation_tasks_table(array('data-new-rel-id'=>$licence->id,'data-new-rel-type'=>'licence')); ?>

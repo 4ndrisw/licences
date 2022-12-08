@@ -171,6 +171,9 @@ $lang['remove_this_item']         = 'Hapus item ini';
 $lang['permission_format']         = 'Permission format';
 $lang['licenced']         = 'Suket diproses';
 
+
+$lang['licence_items_table_heading']         = 'Nama pesawat';
+
 /*
 
 

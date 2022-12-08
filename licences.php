@@ -189,7 +189,7 @@ function licences_module_init_menu_items()
                 'name'     => _l('licences'),
                 'icon'     => 'fa-solid fa-certificate',
                 'href'     => admin_url('licences'),
-                'position' => 12,
+                'position' => 14,
         ]);
     }
 }
