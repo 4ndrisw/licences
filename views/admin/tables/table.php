@@ -2,10 +2,11 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-$program_id = $this->ci->input->post('program_id');
+$licence_id = $this->ci->input->post('licence_id');
 $staff_id = get_staff_user_id();
 $current_user = get_client_type($staff_id);
 $company_id = $current_user->client_id;
+
 
 $aColumns = [
     db_prefix() . 'licences.number',
@@ -15,13 +16,11 @@ $aColumns = [
     'YEAR('. db_prefix() .'licences.date) as year',
     db_prefix() . 'licences.inspector_staff_id',
     db_prefix() . 'licences.date',
-    db_prefix() . 'licences.reference_no',
     db_prefix() . 'licences.status',
     ];
 
 $join = [
     'LEFT JOIN ' . db_prefix() . 'clients ON ' . db_prefix() . 'clients.userid = ' . db_prefix() . 'licences.clientid',
-    //'LEFT JOIN ' . db_prefix() . 'currencies ON ' . db_prefix() . 'currencies.id = ' . db_prefix() . 'licences.currency',
     'LEFT JOIN ' . db_prefix() . 'programs ON ' . db_prefix() . 'programs.id = ' . db_prefix() . 'licences.program_id',
 ];
 
@@ -40,16 +39,64 @@ foreach ($custom_fields as $key => $field) {
 $where  = [];
 $filter = [];
 
-if ($this->ci->input->post('not_sent')) {
-    array_push($filter, 'OR (sent= 0 AND ' . db_prefix() . 'licences.status NOT IN (2,3,4))');
+log_activity(json_encode($this->ci->input->post('not_sent')));
+log_activity(json_encode($this->ci->input->post('reset')));
+log_activity(json_encode($this->ci->input->post()));
+
+switch ($current_user->client_type) {
+    case 'inspector':
+            if ($this->ci->input->post('not_sent')) {
+                array_push($filter, 'OR ('.db_prefix() . 'licences.sent= 0 AND ' . db_prefix() . 'licences.status NOT IN (2,3,4,6,7))');
+            }
+            elseif ($this->ci->input->post('reset')) {
+                array_push($filter, db_prefix() . 'licences.status IN (2)');
+            }
+            else{
+                array_push($filter, 'OR ('. db_prefix() . 'licences.status IN (2,3,4,6,7))');
+            }
+        break;
+    case 'institution':
+    case 'government':
+            if ($this->ci->input->post('not_sent')) {
+                array_push($filter, 'OR ('.db_prefix() . 'licences.sent= 0 AND ' . db_prefix() . 'licences.status NOT IN (2,3,4,6,7))');
+            }
+            elseif ($this->ci->input->post('reset')) {
+                array_push($filter, db_prefix() . 'licences.status IN (6)');
+            }
+            else{
+                array_push($filter, 'OR ('. db_prefix() . 'licences.status IN (2,3,4,6,7))');
+            }
+        break;
+    
+    default:
+            if ($this->ci->input->post('not_sent')) {
+                array_push($filter, 'OR ('.db_prefix() . 'licences.sent= 0 AND ' . db_prefix() . 'licences.status NOT IN (2,3,4,5,6,7))');
+            }
+            else{
+                array_push($filter, db_prefix() . 'licences.status IN (1,2,3,4,5,6,7)');
+            }
+        break;
 }
+
+/*
+if($current_user->client_type != 'Company'){
+    if ($this->ci->input->post('not_sent')) {
+        array_push($filter, 'OR ('.db_prefix() . 'licences.sent= 0 AND ' . db_prefix() . 'licences.status NOT IN (2,3,4,6,7))');
+    }
+    else{
+        array_push($filter, db_prefix() . 'licences.status IN (2,3,4,6,7)');
+    }
+}
+*/
+
 if ($this->ci->input->post('invoiced')) {
-    array_push($filter, 'OR '.db_prefix() . 'licences.inspector_id IS NOT NULL');
+    array_push($filter, 'OR '.db_prefix() . 'licences.signed IS NOT NULL');
 }
 
 if ($this->ci->input->post('not_invoiced')) {
-    array_push($filter, 'OR '.db_prefix() . 'licences.inspector_id IS NULL');
+    array_push($filter, 'OR '.db_prefix() . 'licences.signed IS NULL');
 }
+
 $statuses  = $this->ci->licences_model->get_statuses();
 $statusIds = [];
 foreach ($statuses as $status) {
@@ -97,7 +144,13 @@ if (isset($company_id) && $company_id != '') {
    } 
 }
 
-if(get_option('inspector_staff_only_view_programs_assigned') && is_inspector_staff($staff_id)){
+if (!is_admin() && has_permission('licences', '', 'view_licences_in_inspectors')){
+    $inspector_id = get_inspector_id_by_staff_id($staff_id);
+    array_push($where, 'AND ' . db_prefix() . 'licences.inspector_id =' . $this->ci->db->escape_str($inspector_id));
+}
+
+
+if(get_option('inspector_staff_only_view_programs_assigned') && is_inspector_staff($staff_id) && !has_permission('licences', '', 'view_licences_in_inspectors')){
     $userWhere = 'AND '. db_prefix().'licences.inspector_staff_id'.' = ' . $this->ci->db->escape_str($staff_id);
     array_push($where, $userWhere);
 }
@@ -109,8 +162,8 @@ if(is_inspector_staff($staff_id)){
 
 }
 
-if ($program_id) {
-    array_push($where, 'AND program_id=' . $this->ci->db->escape_str($program_id));
+if ($licence_id) {
+    array_push($where, 'AND licence_id=' . $this->ci->db->escape_str($licence_id));
 }
 
 if (!has_permission('licences', '', 'view')) {
@@ -132,6 +185,7 @@ $result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, [
     'program_id',
     db_prefix() . 'licences.deleted_customer_name',
     db_prefix() . 'licences.hash',
+    db_prefix() . 'licences.reference_no',
 ]);
 
 $output  = $result['output'];
@@ -142,7 +196,7 @@ foreach ($rResult as $aRow) {
 
     $numberOutput = '';
     // If is from client area table or programs area request
-    if ((isset($clientid) && is_numeric($clientid)) || $program_id) {
+    if ((isset($clientid) && is_numeric($clientid)) || $licence_id) {
         $numberOutput = '<a href="' . admin_url('licences/list_licences/' . $aRow['id']) . '" target="_blank">' . format_licence_number($aRow['id']) . '</a>';
     } else {
         $numberOutput = '<a href="' . admin_url('licences/list_licences/' . $aRow['id']) . '" onclick="init_licence(' . $aRow['id'] . '); return false;">' . format_licence_number($aRow['id']) . '</a>';
@@ -179,8 +233,6 @@ foreach ($rResult as $aRow) {
     $row[] = get_staff_full_name($aRow[db_prefix().'licences.inspector_staff_id']);
 
     $row[] = html_date($aRow[db_prefix() . 'licences.date']);
-
-    $row[] = $aRow[db_prefix() . 'licences.reference_no'];
 
     $row[] = format_licence_status($aRow[db_prefix() . 'licences.status']);
 

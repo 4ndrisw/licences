@@ -378,7 +378,7 @@ class Licences extends AdminController
 
     public function mark_action_status($status, $id)
     {
-        if (!has_permission('licences', '', 'edit')) {
+        if (!has_permission('licences', '', 'update_status')) {
             access_denied('licences');
         }
         $success = $this->licences_model->mark_action_status($status, $id);
@@ -794,9 +794,10 @@ class Licences extends AdminController
         $data['licence_item'] = $licence_item;
         $data['licence_item_data'] = $licence_item_data;
         $data['jenis_pesawat'] = $jenis_pesawat;
+        $data['surveyor_staff'] = get_surveyor_staff_data($licence_item->surveyor_staff_id);
 
         $data['id']      = $licence_item_id;
-        $data['title']      = $licence_item->jenis_pesawat . ' form';
+        $data['title']      = str_replace('_',' ',$licence_item->jenis_pesawat) . ' info';
         $data['jenis_pesawat_id']   = $jenis_pesawat_id;
         $this->load->view('admin/licences/licence_item_template', $data);
 

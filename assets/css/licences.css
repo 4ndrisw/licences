@@ -39,3 +39,74 @@ tr.licence_status_1 {
 .tooltip-right i{
     margin-right: 2px;
 }
+
+.card {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+}
+
+.card-header {
+    padding: .75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: rgba(0,0,0,.03);
+    border-bottom: 1px solid rgba(0,0,0,.125);
+}
+
+.card-header.less-padding{
+    padding: .25rem .75rem;
+}
+
+.card-body {
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    padding: 1.25rem;
+}
+
+.card-body.less-padding{
+    padding: .25rem .75rem;
+}
+
+.text-info {
+    color: #17a2b8!important;
+}
+
+.bg-info {
+    background-color: #17a2b8!important;
+}
+
+.text-white {
+    color: #fff!important;
+}
+
+.label-process {
+    color: #004085!important;
+    /*
+    background-color: #cce5ff;
+    border-color: #b8daff;
+    */
+    background-color: #ccffd2;
+    border-color: #8bc7a6;
+}
+
+.label-release {
+    color: #0e2ab7!important;
+    /*
+    background-color: #cce5ff;
+    border-color: #b8daff;
+    */
+    background-color: #71ff82;
+    border-color: #4bc75b;
+}

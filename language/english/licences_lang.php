@@ -26,10 +26,13 @@ $lang['licence_view_activity_tooltip']           = 'Activity Log';
 
 
 $lang['licence_status_draft']           = 'Draft';
-$lang['licence_status_sent']            = 'Sent';
+$lang['licence_status_sent']            = 'Proposed';
 $lang['licence_status_declined']        = 'Declined';
 $lang['licence_status_accepted']        = 'Accepted';
 $lang['licence_status_expired']         = 'Expired';
+$lang['licence_status_processed']         = 'Processed';
+$lang['licence_status_released']         = 'Released';
+
 $lang['licence_note']                   = 'Note:';
 
 $lang['licences']                                = 'Licences';
@@ -177,6 +180,13 @@ $lang['related_to_inspection']         = '%s ini terkait dengan %s: %s';
 $lang['remove_this_item']         = 'Remove this item';
 $lang['permission_format']         = 'Permission format';
 $lang['licenced']         = 'Licenced';
+$lang['view_licences_in_inspectors']         = 'View licences in inspectors';
+$lang['licences_list_all']                       = 'All';
+$lang['licences_reset_list']                       = 'Reset';
+$lang['licence_items_table_heading']                       = 'Equipment';
+$lang['skp_number']                       = 'SKP Number';
+$lang['skp_datestart']                       = 'Issued';
+$lang['skp_dateend']                       = 'Expired';
 
 
 
@@ -196,7 +206,6 @@ $lang['settings_exclude_licence_from_client_area_with_draft_status'] = 'Exclude 
 $lang['licence_add_edit_currency']               = 'Currency';
 $lang['licences_toggle_table_tooltip']           = 'Toggle Table';
 $lang['licence_add_edit_advanced_options']       = 'Advanced Options';
-$lang['licences_list_all']                       = 'All';
 $lang['licence_send_to_client_modal_heading']    = 'Send licence to client';
 $lang['licence_send_to_client_attach_pdf']       = 'Attach licence PDF';
 $lang['licence_subtotal']               = 'Sub Total';

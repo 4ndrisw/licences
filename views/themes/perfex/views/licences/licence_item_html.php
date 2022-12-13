@@ -154,6 +154,13 @@
          </div>
          <div class="row">
             <div class="col-md-12">
+
+               <?php 
+               var_dump($licence->licence_item);
+
+               ?>
+
+
                <div class="table-responsive">
                   <?php
                      $items = get_licence_items_table_data($licence, 'licence');

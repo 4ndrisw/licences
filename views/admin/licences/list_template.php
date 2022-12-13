@@ -15,6 +15,11 @@
       </button>
       <ul class="dropdown-menu width300">
        <li>
+        <a href="#" data-cview="reset" onclick="dt_custom_view('reset','.table-licences','reset'); return false;">
+          <?php echo _l('licences_reset_list'); ?>
+        </a>
+      </li>
+      <li class="<?php if($this->input->get('filter') == 'all'){echo 'active'; } ?>">
         <a href="#" data-cview="all" onclick="dt_custom_view('','.table-licences',''); return false;">
           <?php echo _l('licences_list_all'); ?>
         </a>
@@ -25,6 +30,7 @@
           <?php echo _l('not_sent_indicator'); ?>
         </a>
       </li>
+      <?php if(has_permission('job_report', '', 'create')){ ?>
       <li>
         <a href="#" data-cview="invoiced" onclick="dt_custom_view('invoiced','.table-licences','invoiced'); return false;">
           <?php echo _l('licence_invoiced'); ?>
@@ -33,6 +39,8 @@
       <li>
         <a href="#" data-cview="not_invoiced" onclick="dt_custom_view('not_invoiced','.table-licences','not_invoiced'); return false;"><?php echo _l('licences_not_invoiced'); ?></a>
       </li>
+      <?php }?>
+
       <li class="divider"></li>
       <?php foreach($licence_statuses as $status){ ?>
         <li class="<?php if($this->input->get('status') == $status){echo 'active';} ?>">

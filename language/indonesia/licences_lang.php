@@ -26,10 +26,12 @@ $lang['licence_view_activity_tooltip']           = 'Activity Log';
 
 $lang['licences']                          = 'Surat Keterangan';
 $lang['licence_status_draft']           = 'Draft';
-$lang['licence_status_sent']            = 'Terkirim';
+$lang['licence_status_sent']            = 'Diajukan';
 $lang['licence_status_declined']        = 'Ditolak';
 $lang['licence_status_accepted']        = 'Diterima';
-$lang['licence_status_expired']         = 'Expired';
+$lang['licence_status_expired']         = 'Kadaluarsa';
+$lang['licence_status_processed']         = 'Diproses';
+$lang['licence_status_released']         = 'Terbit';
 $lang['licence_note']                   = 'Catatan:';   
 
 $lang['licences']                                = 'Surat Keterangan';
@@ -65,11 +67,7 @@ $lang['licence_mark_as']                = 'Tandai sbg %s';
 $lang['licence_staff_string']           = 'Manager Operasional';
 $lang['licence_note']                   = 'Catatan:';
 $lang['licence_order']                  = 'Menugaskan kepada staf diatas untuk:';
-$lang['licence_status_draft']           = 'Draft';
-$lang['licence_status_sent']            = 'Terkirim';
-$lang['licence_status_declined']        = 'Ditolak';
-$lang['licence_status_accepted']        = 'Diterima';
-$lang['licence_status_expired']         = 'Kadaluarsa';
+
 $lang['licence_set_reminder_title']             = 'Set Pengingat Surat Keterangan';
 $lang['edit_licence_tooltip']                    = 'Edit Job report';
 $lang['delete_licence_tooltip']                  = 'Delete Job report';
@@ -173,6 +171,22 @@ $lang['licenced']         = 'Suket diproses';
 
 
 $lang['licence_items_table_heading']         = 'Nama pesawat';
+$lang['licence_activity_created']            = 'Surat Keterangan Diajukan';
+$lang['licences_list_all']                 						= 'Semua';
+$lang['licences_toggle_table_tooltip']     						= 'Alihkan Tabel';
+$lang['licence_invoiced_date']                  				= 'Suket telah diberi nomor %s';
+$lang['process']                   = 'Process';
+$lang['program_items_proposed']                   = 'Usulan Pekerjaan';
+$lang['inspection_items_proposed']                   = 'Usulan Inspection';
+$lang['licence_send_to_client_attach_pdf']       					= 'Lampirkan Suket dalam format PDF';
+$lang['licence_send_to_client_preview_template'] 					= 'Tinjau Template Email';
+$lang['view_licences_in_inpectors']         = 'Mengakses semua suket di UPT';
+$lang['licences_reset_list']                       = 'Reset';
+$lang['skp_number']                       = 'Nomor SKP';
+$lang['skp_datestart']                       = 'Tanggal diterbitkan';
+$lang['skp_dateend']                       = 'Tanggal Kadaluarsa';
+
+
 
 /*
 
@@ -206,18 +220,13 @@ $lang['licence_add_edit_duedate']       						= 'Tanggal Selesai';
 $lang['licence_add_edit_currency']         						= 'Mata Uang';
 $lang['licence_add_edit_client_note']      						= 'Catatan untuk Klien';
 $lang['licence_add_edit_admin_note']       						= 'Catatan Admin';
-$lang['licences_toggle_table_tooltip']     						= 'Alihkan Tabel';
 $lang['licence_add_edit_advanced_options'] 						= 'Opsi Lanjutan';
 $lang['licence_to']                        						= 'Kepada';
-$lang['licences_list_all']                 						= 'Semua';
-$lang['licence_invoiced_date']                  					= 'Surat Keterangan telah diberi Faktur pada %s';
 $lang['edit_licence_tooltip']                   					= 'Edit Surat Keterangan';
 $lang['delete_licence_tooltip']                 					= 'Hapus Surat Keterangan';
 $lang['licence_sent_to_email_tooltip']          					= 'Kirim ke Email';
 $lang['licence_view_activity_tooltip']          					= 'Aktivitas Log';
 $lang['licence_send_to_client_modal_heading']    					= 'Kirim Surat Keterangan ke Klien';
-$lang['licence_send_to_client_attach_pdf']       					= 'Lampirkan Surat Keterangan dalam format PDF';
-$lang['licence_send_to_client_preview_template'] 					= 'Tinjau Template Email';
 $lang['licence_convert_to_licence']          						= 'Konversi menjadi Faktur';
 $lang['licence_pdf_heading']            = 'Surat Keterangan';
 $lang['licence_table_item_heading']     = 'Item';
@@ -314,7 +323,6 @@ $lang['licence_not_found']                                 = 'Surat Keterangan t
 $lang['invoice_activity_auto_converted_from_licence']      = 'Faktur otomatis dibuat dari Surat Keterangan dengan nomor %s';
 $lang['licence_due_after']                                      = 'Surat Keterangan Berakhir Setelah (hari)';
 $lang['not_customer_viewed_licence']                        = 'Surat Keterangan dengan nomor %s telah dilihat';
-$lang['licences_not_invoiced']                   = 'Tidak Ditagihkan';
 $lang['licenced_hours']                               = 'Perkiraan Jam';
 $lang['show_pdf_signature_licence']             = 'Tampilkan Tanda Tangan PDF pada Surat Keterangan';
 $lang['show_project_on_licence']                 = 'Tampilkan Nama Proyek pada Surat Keterangan';

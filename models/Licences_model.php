@@ -21,6 +21,8 @@ class Licences_model extends App_Model
             5,
             3,
             4,
+            6,
+            7,
         ]);
     }
 
@@ -590,7 +592,7 @@ class Licences_model extends App_Model
      */
     public function get_licence_item_data($licence_item_id, $jenis_pesawat)
     {
-        $this->db->where('licence_item_id', $licence_item_id);
+        $this->db->where('inspection_item_id', $licence_item_id);
         return $this->db->get(db_prefix() . $jenis_pesawat)->row();
     }
 
@@ -806,9 +808,12 @@ class Licences_model extends App_Model
 
     public function mark_action_status($action, $id, $client = false)
     {
+        $date_status_column = get_date_status_column($action);
+
         $this->db->where('id', $id);
         $this->db->update(db_prefix() . 'licences', [
             'status' => $action,
+            'date_' . $date_status_column => date('Y-m-d H:i:s')
         ]);
         
         $notifiedUsers = [];
@@ -896,6 +901,60 @@ class Licences_model extends App_Model
                     pusher_trigger_notification($notifiedUsers);
                     $this->log_licence_activity($id, 'licence_activity_client_declined', true);
                     hooks()->do_action('licence_declined', $id);
+
+                    return [
+                        'invoiced'  => $invoiced,
+                        'invoiceid' => $invoiceid,
+                    ];
+                } elseif ($action == 6) {
+                    foreach ($staff_licence as $member) {
+                        $notified = add_notification([
+                            'fromcompany'     => true,
+                            'touserid'        => $member['staffid'],
+                            'description'     => 'not_licence_customer_processed',
+                            'link'            => 'licences/list_licences/' . $id,
+                            'additional_data' => serialize([
+                                format_licence_number($licence->id),
+                            ]),
+                        ]);
+
+                        if ($notified) {
+                            array_push($notifiedUsers, $member['staffid']);
+                        }
+                        // Send staff email notification that customer processed licence
+                        send_mail_template('licence_processed_to_staff', $licence, $member['email'], $contact_id);
+                    }
+
+                    pusher_trigger_notification($notifiedUsers);
+                    $this->log_licence_activity($id, 'licence_activity_client_processed', true);
+                    hooks()->do_action('licence_processed', $id);
+
+                    return [
+                        'invoiced'  => $invoiced,
+                        'invoiceid' => $invoiceid,
+                    ];
+                } elseif ($action == 7) {
+                    foreach ($staff_licence as $member) {
+                        $notified = add_notification([
+                            'fromcompany'     => true,
+                            'touserid'        => $member['staffid'],
+                            'description'     => 'not_licence_customer_released',
+                            'link'            => 'licences/list_licences/' . $id,
+                            'additional_data' => serialize([
+                                format_licence_number($licence->id),
+                            ]),
+                        ]);
+
+                        if ($notified) {
+                            array_push($notifiedUsers, $member['staffid']);
+                        }
+                        // Send staff email notification that customer released licence
+                        send_mail_template('licence_released_to_staff', $licence, $member['email'], $contact_id);
+                    }
+
+                    pusher_trigger_notification($notifiedUsers);
+                    $this->log_licence_activity($id, 'licence_activity_client_released', true);
+                    hooks()->do_action('licence_released', $id);
 
                     return [
                         'invoiced'  => $invoiced,
@@ -1406,9 +1465,27 @@ class Licences_model extends App_Model
         $data['licence_addfrom'] = get_staff_user_id();
         $id = $data['id'];
         $licence_id = $data['licence_id'];
+
+        $item = $this->get_licence_item($data['id']);
+
+        include_once(APP_MODULES_PATH . 'institutions/models/Institutions_model.php');
+        $this->load->model('institutions_model');
+        $institution = $this->institutions_model->get($item->institution_id);
+
         unset($data['id']);
         unset($data['inspection_id']);
         unset($data['licence_id']);
+
+        $inspector_staff_nama = get_staff_full_name($item->inspector_staff_id);
+        $inspector_staff_nip = get_staff_nip($item->inspector_staff_id);
+        $kepala_dinas_nama = get_staff_full_name($institution->head_id);
+        $kepala_dinas_nip = get_staff_nip($institution->head_id);
+
+        $data['inspector_staff_nama'] = $inspector_staff_nama;
+        $data['inspector_staff_nip'] = $inspector_staff_nip;
+        $data['kepala_dinas_nama'] = $kepala_dinas_nama;
+        $data['kepala_dinas_nip'] = $kepala_dinas_nip;
+
         $this->db->set('licence_id', $licence_id);
         $this->db->where('id', $id);
         $this->db->update(db_prefix() . 'program_items', $data);
@@ -1437,18 +1514,22 @@ class Licences_model extends App_Model
         //$output = new stdClass;
         
         $data['tanggal_penerbitan'] = $tanggal_penerbitan;
-        $data['tanggal_kadaluarsa'] =  
+        //$data['tanggal_kadaluarsa'] =  
         $data['jenis_pesawat_id'] = $item->jenis_pesawat_id;
         $data['institution_head_id'] = $item->institution->head_id;
-        $data['inspector_staff_id'] = $item->inspector_staff_id;
         
         $masa_berlaku = '+1';
         $program_id = $data['id'];
         unset($data['id']);
         $this->db->set('tanggal_penerbitan', date('Y-m-d'));
+        $this->db->set('tanggal_suket', date('Y-m-d'));
         $this->db->set('tanggal_kadaluarsa', date('Y-m-d', strtotime($masa_berlaku .' years')));
+        
+                
         $this->db->set('nomor_suket', $number);
         $this->db->set('institution_head_id', $item->institution->head_id);
+
+
         $this->db->where('id', $program_id);
         
         $this->db->update(db_prefix() . 'program_items');
@@ -1587,6 +1668,12 @@ class Licences_model extends App_Model
         return $this->db->get(db_prefix() .'lincence_institution_next_number')->result_array();
     } 
 
+    public function get_surveyor_staff($staff_id)
+    {
+        $this->db->where('staffid', $staff_id);
+        $this->db->select(['firstname','lastname', 'skp_number', 'skp_datestart', 'skp_dateend']);
+        return $this->db->get(db_prefix() . 'staff')->row();
+    }
 
 }
 

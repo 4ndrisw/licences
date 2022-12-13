@@ -87,7 +87,6 @@ function licences_add_licence_item(licence_id, id) {
     var data = {};
     data.licence_id = licence_id;
     data.id = id;
-    console.log(data);
     $.post(admin_url + 'licences/add_licence_item', data).done(function (response) {
         reload_licences_tables();
     });

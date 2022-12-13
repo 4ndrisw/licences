@@ -137,7 +137,7 @@ function is_licences_email_expiry_reminder_enabled()
  */
 function is_licences_expiry_reminders_enabled()
 {
-    return is_licences_email_expiry_reminder_enabled() || is_sms_trigger_active(SMS_TRIGGER_SCHEDULE_EXP_REMINDER);
+    return is_licences_email_expiry_reminder_enabled() || is_sms_trigger_active(SMS_TRIGGER_LICENCE_EXP_REMINDER);
 }
 
 /**
@@ -158,6 +158,12 @@ function licence_status_color_pdf($status_id)
     } elseif ($status_id == 4) {
         //Accepted
         $statusColor = '0, 191, 54';
+    } elseif ($status_id == 6) {
+        //Accepted
+        $statusColor = '0, 191, 74';
+    } elseif ($status_id == 7) {
+        //Accepted
+        $statusColor = '0, 191, 94';
     } else {
         // Expired
         $statusColor = '255, 111, 0';
@@ -204,6 +210,12 @@ function licence_status_by_id($id)
     } elseif ($id == 5) {
         // status 5
         $status = _l('licence_status_expired');
+    } elseif ($id == 6) {
+        // status 6
+        $status = _l('licence_status_processed');
+    } elseif ($id == 7) {
+        // status 7
+        $status = _l('licence_status_released');
     } else {
         if (!is_numeric($id)) {
             if ($id == 'not_sent') {
@@ -213,6 +225,31 @@ function licence_status_by_id($id)
     }
 
     return hooks()->apply_filters('licence_status_label', $status, $id);
+}
+
+
+function get_date_status_column($id)
+{
+    $status = '';
+    if ($id == 1) {
+        $status = 'status_draft';
+    } elseif ($id == 2) {
+        $status = 'status_sent';
+    } elseif ($id == 3) {
+        $status = 'status_declined';
+    } elseif ($id == 4) {
+        $status = 'status_accepted';
+    } elseif ($id == 5) {
+        // status 5
+        $status = 'status_expired';
+    } elseif ($id == 6) {
+        // status 6
+        $status = 'status_processed';
+    } elseif ($id == 7) {
+        // status 7
+        $status = 'status_released';
+    }
+    return $status;
 }
 
 /**
@@ -238,6 +275,12 @@ function licence_status_color_class($id, $replace_default_by_muted = false)
     } elseif ($id == 5) {
         // status 5
         $class = 'warning';
+    } elseif ($id == 6) {
+        // status 6
+        $class = 'process';
+    } elseif ($id == 7) {
+        // status 6
+        $class = 'release';
     } else {
         if (!is_numeric($id)) {
             if ($id == 'not_sent') {
@@ -293,7 +336,74 @@ function format_licence_number($id)
     ]);
 }
 
+/**
+ * Format licence number based on description
+ * @param  mixed $id
+ * @return string
+ */
+function format_licence_item_number($id, $category, $nomor_suket, $item_id)
+{
+    $CI = &get_instance();
+    $CI->db->select('date,number,prefix,number_format')->from(db_prefix() . 'licences')->where('id', $id);
+    $licence = $CI->db->get()->row();
 
+    if (!$licence) {
+        return '';
+    }
+    $licence->prefix = strtoupper($category) .'-';
+    $number = licence_item_number_format($nomor_suket, $licence->number_format, $licence->prefix, $licence->date);
+
+    return hooks()->apply_filters('format_licence_number', $number, [
+        'id'       => $id,
+        'licence' => $licence,
+    ]);
+}
+
+function format_month($month){
+    switch ($month) {
+        case '01':
+             $output = 'I';
+            break;
+        case '02':
+             $output = 'II';
+            break;
+        case '03':
+             $output = 'III';
+            break;
+        case '04':
+             $output = 'IV';
+            break;
+        case '05':
+             $output = 'V';
+            break;
+        case '06':
+             $output = 'VI';
+            break;
+        case '07':
+             $output = 'VII';
+            break;
+        case '08':
+             $output = 'VIII';
+            break;
+        case '09':
+             $output = 'IX';
+            break;
+        case '10':
+             $output = 'X';
+            break;
+        case '11':
+             $output = 'XI';
+            break;
+        case '12':
+             $output = 'XII';
+            break;
+        
+        default:
+             $output = $month;
+            break;
+    }
+    return $output;
+}
 function licence_number_format($number, $format, $applied_prefix, $date)
 {
     $originalNumber = $number;
@@ -314,6 +424,33 @@ function licence_number_format($number, $format, $applied_prefix, $date)
     }
 
     return hooks()->apply_filters('licence_number_format', $number, [
+        'format'         => $format,
+        'date'           => $date,
+        'number'         => $originalNumber,
+        'prefix_padding' => $prefixPadding,
+    ]);
+}
+
+function licence_item_number_format($number, $format, $applied_prefix, $date)
+{
+    $originalNumber = $number;
+    $prefixPadding  = get_option('number_padding_prefixes');
+
+    if ($format == 1) {
+        // Number based
+        $number = $applied_prefix . str_pad($number, $prefixPadding, '0', STR_PAD_LEFT);
+    } elseif ($format == 2) {
+        // Year based
+        $number = $applied_prefix . date('Y', strtotime($date)) . '.' . str_pad($number, $prefixPadding, '0', STR_PAD_LEFT);
+    } elseif ($format == 3) {
+        // Number-yy based
+        $number = $applied_prefix . str_pad($number, $prefixPadding, '0', STR_PAD_LEFT) . '-' . date('y', strtotime($date));
+    } elseif ($format == 4) {
+        // Number-mm-yyyy based
+        $number = $applied_prefix . str_pad($number, $prefixPadding, '0', STR_PAD_LEFT) . ' / K3 / ' . format_month(date('m', strtotime($date))) . ' / ' . date('Y', strtotime($date));
+    }
+
+    return hooks()->apply_filters('licence_item_number_format', $number, [
         'format'         => $format,
         'date'           => $date,
         'number'         => $originalNumber,
@@ -466,7 +603,7 @@ function user_can_view_licence($id, $staff_id = false)
  */
 function licence_pdf($licence, $tag = '')
 {
-    return app_pdf('licence',  module_libs_path(SCHEDULES_MODULE_NAME) . 'pdf/Licence_pdf', $licence, $tag);
+    return app_pdf('licence',  module_libs_path(LICENCES_MODULE_NAME) . 'pdf/Licence_pdf', $licence, $tag);
 }
 
 
@@ -479,7 +616,7 @@ function licence_pdf($licence, $tag = '')
  */
 function licence_office_pdf($licence, $tag = '')
 {
-    return app_pdf('licence',  module_libs_path(SCHEDULES_MODULE_NAME) . 'pdf/Licence_office_pdf', $licence, $tag);
+    return app_pdf('licence',  module_libs_path(LICENCES_MODULE_NAME) . 'pdf/Licence_office_pdf', $licence, $tag);
 }
 
 
@@ -494,7 +631,7 @@ function licence_office_pdf($licence, $tag = '')
  */
 function get_licence_items_table_data($transaction, $type, $for = 'html', $admin_preview = false)
 {
-    include_once(module_libs_path(SCHEDULES_MODULE_NAME) . 'Licence_items_table.php');
+    include_once(module_libs_path(LICENCES_MODULE_NAME) . 'Licence_items_table.php');
 
     $class = new Licence_items_table($transaction, $type, $for, $admin_preview);
 
@@ -617,7 +754,7 @@ function licence_mail_preview_data($template, $customer_id_or_email, $mailClassP
 function get_licence_upload_path($type=NULL)
 {
    $type = 'licence';
-   $path = SCHEDULE_ATTACHMENTS_FOLDER;
+   $path = LICENCE_ATTACHMENTS_FOLDER;
    
     return hooks()->apply_filters('get_upload_path_by_type', $path, $type);
 }
@@ -740,4 +877,39 @@ function delete_licence_items($id){
     $CI->db->where('licence_id',$id);
     $CI->db->set('licence_id', null);
     $CI->db->update(db_prefix(). 'programs')();
+}
+
+function licence_hash($id){
+    $CI = &get_instance();
+    $CI->db->where('id',$id);
+    $CI->db->select('hash');
+    return $CI->db->get(db_prefix(). 'licences')->row('hash');    
+}
+
+
+/**
+ * Prepare general licence pdf
+ * @since  Version 1.0.2
+ * @param  object $licence licence as object with all necessary fields
+ * @param  string $tag tag for bulk pdf exporter
+ * @return mixed object
+ */
+function licence_item_pdf($licence, $licence_item, $licence_item_data, $surveyor_staff)
+{
+    return app_pdf('licence',  module_libs_path(LICENCES_MODULE_NAME) . 'pdf/Licence_item_pdf', $licence, $licence_item, $licence_item_data, $surveyor_staff);
+}
+
+function get_licence_items($item_id){
+
+    $CI = &get_instance();
+    $CI->load->model('licences_model');
+    return $CI->licences_model->get_licence_items($item_id);
+}
+
+
+function get_surveyor_staff_data($staff_id){
+
+    $CI = &get_instance();
+    $CI->load->model('licences_model');
+    return $CI->licences_model->get_surveyor_staff($staff_id);
 }

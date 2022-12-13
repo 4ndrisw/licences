@@ -128,6 +128,15 @@ function licences_permissions()
 
     $capabilities['capabilities'] = [
             'view'   => _l('permission_view') . '(' . _l('permission_global') . ')',
+            'view_licences_in_inspectors' => _l('view_licences_in_inspectors'),
+            'view_licences_in_institutions' => _l('view_licences_in_institutions'),
+            'update_status' => _l('update_status'),
+            'update_status_2' => _l('update_status_2'),
+            'update_status_3' => _l('update_status_3'),
+            'update_status_4' => _l('update_status_4'), // proposed
+            'update_status_6' => _l('update_status_6'), // processed
+            'update_status_7' => _l('update_status_7'), // released
+
             'create' => _l('permission_create'),
             'edit'   => _l('permission_edit'),
             'delete' => _l('permission_delete'),

@@ -14,7 +14,6 @@ $table_data = array(
    ),
    _l('inspector_staff'),
    _l('licence_dt_table_heading_date'),
-   _l('reference_no'),
    _l('licence_dt_table_heading_status'));
 
 $table_data = hooks()->apply_filters('licences_table_columns', $table_data);

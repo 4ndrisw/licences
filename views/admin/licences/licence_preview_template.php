@@ -121,7 +121,7 @@
                   <li role="presentation" data-toggle="tooltip" title="<?php echo _l('emails_tracking'); ?>" class="tab-separator">
                      <a href="#tab_emails_tracking" aria-controls="tab_emails_tracking" role="tab" data-toggle="tab">
                      <?php if(!is_mobile()){ ?>
-                     <i class="fa fa-envelope-open-o" aria-hidden="true"></i>
+                     <i class="fa-regular fa-envelope-open" aria-hidden="true"></i>
                      <?php } else { ?>
                      <?php echo _l('emails_tracking'); ?>
                      <?php } ?>
@@ -207,17 +207,17 @@
                            </li>
                         <?php } ?>
                         <?php if($licence->invoiceid == NULL){
-                           if(staff_can('edit', 'licences')){
+                           if(staff_can('edit', 'licences') || staff_can('update_status', 'licences')){
                              foreach($licence_statuses as $status){
-                               if($licence->status != $status){ ?>
-                        <li>
-                           <a href="<?php echo admin_url() . 'licences/mark_action_status/'.$status.'/'.$licence->id; ?>">
-                           <?php echo _l('licence_mark_as',format_licence_status($status,'',false)); ?></a>
-                        </li>
-                        <?php }
-                           }
-                           ?>
-                        <?php } ?>
+                               if($licence->status != $status && staff_can('update_status_'.$status, 'licences') ){ ?>
+                                 <li>
+                                    <a href="<?php echo admin_url() . 'licences/mark_action_status/'.$status.'/'.$licence->id; ?>">
+                                    <?php echo _l('licence_mark_as',format_licence_status($status,'',false)); ?></a>
+                                 </li>
+                                 <?php }
+                              }
+                              ?>
+                           <?php } ?>
                         <?php } ?>
                         <?php if(staff_can('create', 'licences')){ ?>
                         <li>
@@ -313,13 +313,7 @@
                      <?php } ?>
                      <div class="col-md-6 col-sm-6">
                         <h4 class="bold">
-                           <?php
-                              $tags = get_tags_in($licence->id,'licence');
-                              if(count($tags) > 0){
-                                echo '<i class="fa fa-tag" aria-hidden="true" data-toggle="tooltip" data-title="'.html_escape(implode(', ',$tags)).'"></i>';
-                              }
-                              ?>
-                           <a href="<?php echo admin_url('licences/licence/'.$licence->id); ?>">
+                           <a href="<?php echo site_url('licences/show/'.$licence->id.'/'.$licence->hash); ?>">
                            <span id="licence-number">
                            <?php echo format_licence_number($licence->id); ?>
                            </span>
@@ -443,8 +437,6 @@
                <span class="label label-success mbot5 mtop5"><?php echo _l($licence->licence_item_info); ?> </span>
                <hr />
                <?php render_datatable(array( _l( 'licence_items_table_heading'), _l( 'serial_number'), _l( 'unit_number'), _l( 'process')), 'licence_items'); ?>
-               <?php echo _l('this_list_has_been_load_from_master_of_equipment'); ?>
-
             </div>
             <div role="tabpanel" class="tab-pane" id="tab_inspection_items">
                <span class="label label-success mbot5 mtop5"><?php echo _l('inspection_items_proposed'); ?> </span>
