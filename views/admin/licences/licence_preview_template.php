@@ -206,8 +206,9 @@
                               </a>
                            </li>
                         <?php } ?>
+
                         <?php if($licence->invoiceid == NULL){
-                           if(staff_can('edit', 'licences') || staff_can('update_status', 'licences')){
+                           if(staff_can('create', 'job_reports') || staff_can('update_status', 'licences')){
                              foreach($licence_statuses as $status){
                                if($licence->status != $status && staff_can('update_status_'.$status, 'licences') ){ ?>
                                  <li>
@@ -219,6 +220,7 @@
                               ?>
                            <?php } ?>
                         <?php } ?>
+
                         <?php if(staff_can('create', 'licences')){ ?>
                         <li>
                            <a href="<?php echo admin_url('licences/copy/'.$licence->id); ?>">
@@ -268,7 +270,9 @@
          <div class="clearfix"></div>
          <hr class="hr-panel-heading" />
          <div class="tab-content">
-            <div role="tabpanel" class="tab-pane ptop10 active" id="tab_licence">
+            <div role="tabpanel" class="tab-pane active" id="tab_licence">
+               <span class="label label-success mbot5 mtop5"><?php echo _l($licence->licence_item_info); ?> </span>
+               <hr />
                <?php if(isset($licence->licenced_email) && $licence->licenced_email) { ?>
                      <div class="alert alert-warning">
                         <?php echo _l('invoice_will_be_sent_at', _dt($licence->licenced_email->licenced_at)); ?>

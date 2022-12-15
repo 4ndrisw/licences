@@ -68,10 +68,19 @@ foreach ($rResult as $aRow) {
 
                 $btn_disable = '' ;
 
-                if($licence_status == 6){
+                //if($licence_status == 6){
+                if($licence_status == 2){
                     $_data = '<a class="btn btn-success '.$btn_disable.'" title = "'._l('add_licence_number').'" href="#" onclick="licences_add_licence_item_number(' . $aRow['id'] . ',' . '); return false;">+</a>';
+                }
+                /*
+                elseif($licence_status == 2){
+                    $_data = '<a class="btn btn-info '.$btn_disable.'" title = "'._l('prosessed_this_item').'" href="#" onclick="licences_process_licence_item(' . $aRow['id'] . ',' . '); return false;">+</a>';
+                }
+                */
+                elseif($licence_status == 1){
+                    $_data = '<a class="btn btn-danger '.$btn_disable.'" title = "'._l('remove_this_item').'" href="#" onclick="licences_remove_licence_item(' . $aRow['id'] . ',' . '); return false;">X</a>';
                 }else{
-                    $_data = '<a class="btn btn-danger '.$btn_disable.'" title = "'._l('remove_this_item').'" href="#" onclick="licences_remove_licence_item(' . $aRow['id'] . ',' . '); return false;">x</a>';
+                    $_data = '';
                 }
             }
         }

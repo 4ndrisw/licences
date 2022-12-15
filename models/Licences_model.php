@@ -16,13 +16,13 @@ class Licences_model extends App_Model
         parent::__construct();
 
         $this->statuses = hooks()->apply_filters('before_set_licence_statuses', [
-            1,
-            2,
-            5,
-            3,
-            4,
-            6,
-            7,
+            1, //draft
+            2, //propose
+            5, //expired
+            3, //decline
+            4, //accept
+            6, //process
+            7, //release
         ]);
     }
 
@@ -1494,6 +1494,12 @@ class Licences_model extends App_Model
 
     public function licences_remove_licence_item($data){
         $this->db->set('licence_id', null);
+        $this->db->where('id', $data['id']);
+        $this->db->update(db_prefix() . 'program_items', $data);
+    }
+
+    public function licences_process_licence_item($data){
+        $this->db->set('status', 6);
         $this->db->where('id', $data['id']);
         $this->db->update(db_prefix() . 'program_items', $data);
     }

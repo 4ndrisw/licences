@@ -92,14 +92,23 @@ function licences_add_licence_item(licence_id, id) {
     });
 }
 
+function licences_process_licence_item(id) {
+    var data = {};
+    data.id = id;
+    $.post(admin_url + 'licences/process_licence_item', data).done(function (response) {
+        reload_licences_tables();
+    });
+}
+
+
 function licences_remove_licence_item(id) {
     var data = {};
     data.id = id;
-    console.log(data);
     $.post(admin_url + 'licences/remove_licence_item', data).done(function (response) {
         reload_licences_tables();
     });
 }
+
 
 
 function licences_load_licence_template(id) {

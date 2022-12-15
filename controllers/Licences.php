@@ -381,12 +381,48 @@ class Licences extends AdminController
         if (!has_permission('licences', '', 'update_status')) {
             access_denied('licences');
         }
+
+        log_activity(json_encode('1 == status ' . $status . ' id ' . $id));
+        $action = $status;
+        if($action = 2 || $action = 4){
+            $licence = $this->licences_model->get($id);
+
+            if($licence->reference_no == NULL || $licence->reference_no == '' ){
+                set_alert('danger', _l('licence_status_changed_fail'));
+                log_activity('error 1 reference_no is null or empty');
+            }
+            else{
+                $total_licence_items = total_rows(db_prefix().'program_items',
+                  array(
+                   'licence_id'=>$id,
+                   'surveyor_staff_id <>'=> null,
+                  )
+                );
+                log_activity('total_licence_items ' . json_encode($total_licence_items));
+                if($total_licence_items < 1){
+                    set_alert('danger', _l('licence_status_changed_fail'));
+                    log_activity('error 2 there is no licence_items');
+
+                    if ($this->set_licence_pipeline_autoload($id)) {
+                        redirect($_SERVER['HTTP_REFERER']);
+                    } else {
+                        redirect(admin_url('licences/list_licences/' . $id));
+                    }
+                }
+            }
+        }
+
+        log_activity(json_encode('2 == status ' . $status . ' id ' . $id));
         $success = $this->licences_model->mark_action_status($status, $id);
+
+        log_activity(json_encode($success));
+
         if ($success) {
             set_alert('success', _l('licence_status_changed_success'));
         } else {
             set_alert('danger', _l('licence_status_changed_fail'));
         }
+
         if ($this->set_licence_pipeline_autoload($id)) {
             redirect($_SERVER['HTTP_REFERER']);
         } else {
@@ -696,6 +732,13 @@ class Licences extends AdminController
             $this->licences_model->licences_remove_licence_item($this->input->post());
         }
     }
+    
+    public function process_licence_item()
+    {
+        if ($this->input->post() && $this->input->is_ajax_request()) {
+            $this->licences_model->licences_process_licence_item($this->input->post());
+        }
+    }
 
     public function add_licence_item_number()
     {
@@ -795,6 +838,13 @@ class Licences extends AdminController
         $data['licence_item_data'] = $licence_item_data;
         $data['jenis_pesawat'] = $jenis_pesawat;
         $data['surveyor_staff'] = get_surveyor_staff_data($licence_item->surveyor_staff_id);
+        //$data['permits']    = get_surveyor_permits_by_category($licence_item->surveyor_id, $licence_item->kelompok_alat);
+        $permits    = get_surveyor_permits_by_category($licence_item->surveyor_id, $licence_item->kelompok_alat);
+        
+        foreach($permits as $legals){
+            $permit[$legals->rel_type] = $legals;                          
+        }
+        $data['permit'] = !empty($permit) ? $permit : [];
 
         $data['id']      = $licence_item_id;
         $data['title']      = str_replace('_',' ',$licence_item->jenis_pesawat) . ' info';

@@ -40,7 +40,6 @@
                           </div>
                         </div>
 
-
                         <div class="card border-info mbot5">
                           <div class="card-header less-padding"><?php echo _l('surveyor'); ?></div>
                           <div class="card-body less-padding text-info">
@@ -50,36 +49,54 @@
                                   <p class="card-text"><?php echo get_client($licence_item->surveyor_id)->company;?></p>
                                 </div>
                               </div>
-
-                              <div class="card border-info mbot5">
-                                <div class="card-header less-padding"><?php echo _l('staff'); ?></div>
-                                <div class="card-body less-padding text-info">
-                                  <p class="card-text"><?php echo ($surveyor_staff->firstname.' '.$surveyor_staff->lastname);?></p>
-                                </div>
-                              </div>
-
                               <div class="card border-info mbot5">
                                 <div class="card-header less-padding"><?php echo _l('skp_number'); ?></div>
                                 <div class="card-body less-padding text-info">
-                                  <p class="card-text"><?php echo ($surveyor_staff->skp_number);?></p>
+                                  <p class="card-text"><?php echo (isset($permit['surveyor']->permit_number) ? $permit['surveyor']->permit_number : '');?></p>
                                 </div>
                               </div>
-
                               <div class="card border-info mbot5">
                                 <div class="card-header less-padding"><?php echo _l('skp_datestart'); ?></div>
                                 <div class="card-body less-padding text-info">
-                                  <p class="card-text"><?php echo html_date($surveyor_staff->skp_datestart);?></p>
+                                  <p class="card-text"><?php echo isset($permit['surveyor']->date_issued) ? html_date($permit['surveyor']->date_issued) : '';?></p>
                                 </div>
                               </div>
-
                               <div class="card border-info mbot5">
                                 <div class="card-header less-padding"><?php echo _l('skp_dateend'); ?></div>
                                 <div class="card-body less-padding text-info">
-                                  <p class="card-text"><?php echo html_date($surveyor_staff->skp_dateend);?></p>
+                                  <p class="card-text"><?php echo isset($permit['surveyor']->date_expired) ? html_date($permit['surveyor']->date_expired) : '';?></p>
                                 </div>
                               </div>
+                          </div>
+                        </div>
 
-
+                        <div class="card border-info mbot5">
+                          <div class="card-header less-padding"><?php echo _l('surveyor_expert'); ?></div>
+                          <div class="card-body less-padding text-info">
+                              <div class="card border-info mbot5">
+                                <div class="card-header less-padding"><?php echo _l('staff'); ?></div>
+                                <div class="card-body less-padding text-info">
+                                  <p class="card-text"><?php echo isset($permit['surveyor_staff']) ? get_staff_full_name($permit['surveyor_staff']->staff) : '';?></p>
+                                </div>
+                              </div>
+                              <div class="card border-info mbot5">
+                                <div class="card-header less-padding"><?php echo _l('skp_number'); ?></div>
+                                <div class="card-body less-padding text-info">
+                                  <p class="card-text"><?php echo (isset($permit['surveyor_staff']->permit_number) ? $permit['surveyor_staff']->permit_number : '');?></p>
+                                </div>
+                              </div>
+                              <div class="card border-info mbot5">
+                                <div class="card-header less-padding"><?php echo _l('skp_datestart'); ?></div>
+                                <div class="card-body less-padding text-info">
+                                  <p class="card-text"><?php echo isset($permit['surveyor_staff']->date_issued) ? html_date($permit['surveyor_staff']->date_issued) : '';?></p>
+                                </div>
+                              </div>
+                              <div class="card border-info mbot5">
+                                <div class="card-header less-padding"><?php echo _l('skp_dateend'); ?></div>
+                                <div class="card-body less-padding text-info">
+                                  <p class="card-text"><?php echo isset($permit['surveyor_staff']->date_expired) ? html_date($permit['surveyor_staff']->date_expired) : '';?></p>
+                                </div>
+                              </div>
                           </div>
                         </div>
 
@@ -91,6 +108,12 @@
                                 <div class="card-header less-padding"><?php echo _l('inspection_number'); ?></div>
                                 <div class="card-body less-padding text-info">
                                   <p class="card-text"><?php echo format_inspection_number($licence_item->inspection_id);?></p>
+                                </div>
+                              </div>
+                              <div class="card border-info mbot5">
+                                <div class="card-header less-padding"><?php echo _l('category'); ?></div>
+                                <div class="card-body less-padding text-info">
+                                  <p class="card-text"><?php echo  strtoupper($licence_item->kelompok_alat);?></p>
                                 </div>
                               </div>
                               <div class="card border-info mbot5">
@@ -177,6 +200,10 @@
                         var_dump($licence_item);
                         echo '===================<br />';
                         var_dump($surveyor_staff);
+                        echo '===================<br />';
+                        
+                          var_dump($permit);
+                        
                         echo '</pre>';
                       ?>
                      </div>
