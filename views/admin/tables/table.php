@@ -39,10 +39,6 @@ foreach ($custom_fields as $key => $field) {
 $where  = [];
 $filter = [];
 
-log_activity(json_encode($this->ci->input->post('not_sent')));
-log_activity(json_encode($this->ci->input->post('reset')));
-log_activity(json_encode($this->ci->input->post()));
-
 switch ($current_user->client_type) {
     case 'inspector':
             if ($this->ci->input->post('not_sent')) {

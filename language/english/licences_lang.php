@@ -181,12 +181,22 @@ $lang['remove_this_item']         = 'Remove this item';
 $lang['permission_format']         = 'Permission format';
 $lang['licenced']         = 'Licenced';
 $lang['view_licences_in_inspectors']         = 'View licences in inspectors';
+$lang['view_licences_in_institutions']         = 'View licences in institutions';
 $lang['licences_list_all']                       = 'All';
 $lang['licences_reset_list']                       = 'Reset';
 $lang['licence_items_table_heading']                       = 'Equipment';
 $lang['skp_number']                       = 'SKP Number';
 $lang['skp_datestart']                       = 'Issued';
 $lang['skp_dateend']                       = 'Expired';
+
+
+$lang['update_status']                       = 'Update status';
+$lang['update_status_2']                       = 'Update status 2';
+$lang['update_status_3']                       = 'Update status 3';
+$lang['update_status_4']                       = 'Update status 4';
+$lang['update_status_5']                       = 'Update status 5';
+$lang['update_status_6']                       = 'Update status 6';
+$lang['update_status_7']                       = 'Update status 7';
 
 
 

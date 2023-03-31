@@ -180,7 +180,9 @@ $lang['program_items_proposed']                   = 'Usulan Pekerjaan';
 $lang['inspection_items_proposed']                   = 'Usulan Inspection';
 $lang['licence_send_to_client_attach_pdf']       					= 'Lampirkan Suket dalam format PDF';
 $lang['licence_send_to_client_preview_template'] 					= 'Tinjau Template Email';
-$lang['view_licences_in_inpectors']         = 'Mengakses semua suket di UPT';
+$lang['view_licences_in_inspectors']         = 'Melihat semua suket di UPT';
+$lang['view_licences_in_institutions']         = 'Melihat semua suket di Kantor Dinas';
+
 $lang['licences_reset_list']                       = 'Reset';
 $lang['skp_number']                       = 'Nomor SKP';
 $lang['skp_datestart']                       = 'Tanggal diterbitkan';
